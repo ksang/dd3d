@@ -27,6 +27,38 @@ make docker-build # CUDA 10.2
 # Alternative docker image for cuda 11.1
 # make docker-build DOCKERFILE=Dockerfile-cu111
 ```
+
+### Manual install with conda (for CUDA 10.2)
+```
+conda env create -f environment.yml
+conda activate dd3d
+
+apt-get update && apt-get install \ 
+    python3-opencv \
+    libnuma-dev
+
+
+mkdir /tmp/openmpi && \
+    cd /tmp/openmpi && \
+    wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.1.tar.gz && \
+    tar zxf openmpi-4.1.1.tar.gz && \
+    cd openmpi-4.1.1 && \
+    ./configure --enable-orterun-prefix-by-default && \
+    make -j $(nproc) all && \
+    make install && \
+    ldconfig && \
+    rm -rf /tmp/openmpi
+
+pip install -r requirments.txt
+export FVCORE_CACHE="/tmp"
+pip install -U 'git+https://github.com/facebookresearch/fvcore'
+python -m pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu102/torch1.9/index.html
+
+# Pre-built pytorch3d
+pip install pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py38_cu102_pyt190/download.html
+
+```
+
 Please check the version of your nvidia driver and [cuda compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/) to determine which Dockerfile to use.
 
 We will list below all commands as if run directly inside our container. To run any of the commands in a container, you can either start the container in interactive mode with `make docker-dev` to land in a shell where you can type those commands, or you can do it in one step:
