@@ -1,4 +1,4 @@
-name: detr3d
+name: dd3d
 channels:
   - pytorch
   - conda-forge
