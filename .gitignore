@@ -8,7 +8,7 @@ hostfiles/
 # Raw files
 *.jpg
 *.png
-*.txt
+# *.txt
 
 # compilation and distribution
 __pycache__
