@@ -9,8 +9,9 @@ defaults:
 MODEL:
   META_ARCHITECTURE: NuscenesDD3D
   # from-coco, IODA-pretrained.
-  CKPT: https://tri-ml-public.s3.amazonaws.com/github/dd3d/pretrained/depth_pretrained_v99-3jlw0p36-20210423_010520-model_final-remapped.pth
-
+  #CKPT: https://tri-ml-public.s3.amazonaws.com/github/dd3d/pretrained/depth_pretrained_v99-3jlw0p36-20210423_010520-model_final-remapped.pth
+  # from KITTI pre-trained final model.
+  CKPT: https://tri-ml-public.s3.amazonaws.com/github/dd3d/experiments/4elbgev2-20210825_201852/model_final.pth
 FE:
   BACKBONE:
     NORM: FrozenBN
@@ -44,7 +45,8 @@ INPUT:
     MAX_SIZE_TEST: 100000
 
 SOLVER:
-  IMS_PER_BATCH: 64 # need at least 400 GPU mem (with fp16).
+  #IMS_PER_BATCH: 64 # need at least 400 GPU mem (with fp16).
+  IMS_PER_BATCH: 1
   BASE_LR: 0.002
   MAX_ITER: 120000
   STEPS: [100000, 115000]
@@ -53,17 +55,17 @@ SOLVER:
   CHECKPOINT_PERIOD: 2000
 
 TEST:
-  IMS_PER_BATCH: 192 # 6 * 32 (must be multiple of 6 x #GPUs.)
+  IMS_PER_BATCH: 6 # 6 * 32 (must be multiple of 6 x #GPUs.)
   EVAL_PERIOD: 2000
   AUG:
-    ENABLED: True
+    ENABLED: False
     MIN_SIZES: [640, 768, 896, 1024, 1152]
     MAX_SIZE: 100000
     FLIP: True
 
 DATALOADER:
   TRAIN:
-    NUM_WORKERS: 12
+    NUM_WORKERS: 1
     SAMPLER: RepeatFactorTrainingSampler
     REPEAT_THRESHOLD: 0.8
   TEST:
