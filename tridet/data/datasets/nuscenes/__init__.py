@@ -37,13 +37,13 @@ def register_nuscenes_datasets(required_datasets, cfg):
     if nusc_datasets:
         LOG.info(f"nuScenes-3D dataset(s): {', '.join(nusc_datasets)} ")
         for name in nusc_datasets:
-            fn, kwargs = DATASET_DICTS_BUILDER[name]
-            kwargs.update({
-                'root_dir': os.path.join(cfg.DATASET_ROOT, NUSCENES_ROOT),
-                'min_num_lidar_points': cfg.DATASETS.TRAIN.MIN_NUM_LIDAR_PTS,
-                'min_box_visibility': cfg.DATASETS.TRAIN.MIN_BOX_VISIBILITY
-            })
-            if DatasetCatalog.get(name) is not None:
+            if name not in DatasetCatalog.list():
+                fn, kwargs = DATASET_DICTS_BUILDER[name]
+                kwargs.update({
+                    'root_dir': os.path.join(cfg.DATASET_ROOT, NUSCENES_ROOT),
+                    'min_num_lidar_points': cfg.DATASETS.TRAIN.MIN_NUM_LIDAR_PTS,
+                    'min_box_visibility': cfg.DATASETS.TRAIN.MIN_BOX_VISIBILITY
+                })
                 DatasetCatalog.register(name, partial(fn, **kwargs))
 
                 fn, kwargs = METADATA_BUILDER[name]
