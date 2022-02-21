@@ -43,8 +43,9 @@ def register_nuscenes_datasets(required_datasets, cfg):
                 'min_num_lidar_points': cfg.DATASETS.TRAIN.MIN_NUM_LIDAR_PTS,
                 'min_box_visibility': cfg.DATASETS.TRAIN.MIN_BOX_VISIBILITY
             })
-            DatasetCatalog.register(name, partial(fn, **kwargs))
+            if DatasetCatalog.get(name) is not None:
+                DatasetCatalog.register(name, partial(fn, **kwargs))
 
-            fn, kwargs = METADATA_BUILDER[name]
-            fn(name, **kwargs)
+                fn, kwargs = METADATA_BUILDER[name]
+                fn(name, **kwargs)
     return nusc_datasets
